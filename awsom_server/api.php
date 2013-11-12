@@ -119,6 +119,19 @@ class Light{
 		return $this->getByChannel($channel);
 	}
 
+        function getChannelDescription($channel){
+                $q = $this->db->prepare('SELECT description FROM light WHERE channel=:channel');
+                $q->bindValue(':channel', $channel, SQLITE3_INTEGER);
+                if($q === false)
+                        return '?';
+                $r=$q->execute();
+                if($r === false)
+                        return '?';
+                $r=$r->fetchArray();
+                if($r === false)
+                        return '?';
+                return $r['description'];
+        }
 		
 
 };
@@ -156,6 +169,9 @@ switch($r[0]){
 	case 'setAll':
 		echo $l->setAll($r[1]);
 		break;
+	case 'getChannelDescription':
+                echo $l->getChannelDescription($r[1]);
+                break;
 	default:
 		echo '?';
 }
